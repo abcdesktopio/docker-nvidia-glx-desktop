@@ -110,8 +110,11 @@ sudo sed -i '/Section\s\+"Monitor"/a\    '"$MODELINE" /etc/X11/xorg.conf
 # Prevent interference between GPUs, add this to the host or other containers running Xorg as well
 echo -e "Section \"ServerFlags\"\n    Option \"AutoAddGPU\" \"false\"\nEndSection" | sudo tee -a /etc/X11/xorg.conf > /dev/null
 
+
+# Read DISPLAY from env or use :0 if not set 
 # Default display is :0 across the container
-export DISPLAY=":0"
+export DISPLAY=${DISPLAY:-':0'}
+
 # Run Xorg server with required extensions
 Xorg vt7 -noreset -novtswitch -sharevts -dpi "${DPI}" +extension "GLX" +extension "RANDR" +extension "RENDER" +extension "MIT-SHM" "${DISPLAY}" &
 
